@@ -1,4 +1,24 @@
 <div>
+  <h2>Agregar Nueva Pregunta</h2>
+  <form (ngSubmit)="onSubmit()" #questionForm="ngForm">
+    <div>
+      <label for="text">Texto de la Pregunta:</label>
+      <input type="text" id="text" required [(ngModel)]="newQuestion.text" name="text" />
+    </div>
+
+    <div>
+      <label for="category">Categoría:</label>
+      <select id="category" required [(ngModel)]="newQuestion.category_name" name="category">
+        <option value="">Seleccionar categoría</option>
+        <option value="Picante">Picante</option>
+        <option value="Curiosidades">Curiosidades</option>
+        <!-- Agrega más opciones según sea necesario -->
+         <!-- Esto no deberia estar hardcodeado! -->
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="questionForm.invalid">Agregar Pregunta</button>
+  </form>
     <h2>Lista de Preguntas</h2>
     <ul>
       <li *ngFor="let question of Questions">
