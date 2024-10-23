@@ -19,27 +19,22 @@ export class LoginComponent {
 
   constructor(private authService: AuthService) {}
 
-  onLogin(){
+  async onLogin() {
     this.loading = true;
     this.error = '';
     this.success = false;
 
-    this.authService.login(this.username, this.password).subscribe({
-      next: (isValid) => {
-        this.loading = false;
-        if (isValid) {
-          this.success = true;
-          console.log('Login exitoso');
-        } else {
-          this.error = 'Usuario o contraseña incorrectos';
-        }
-      },
-      error: (err) => {
-        this.loading = false;
-        this.error = 'Error en el servidor';
-        console.error('Error:', err);
-      }
-    });
+    try {
+      // Llamada a login usando async/await
+      await this.authService.login(this.username, this.password);
+      this.loading = false;
+      this.success = true;
+      console.log('Login exitoso');
+    } catch (err) {
+      this.loading = false;
+      this.error = 'Usuario o contraseña incorrectos';
+      console.error('Error en el login:', err);
+    }
   }
   
 }
