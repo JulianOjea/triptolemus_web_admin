@@ -10,10 +10,9 @@
       <label for="category">Categoría:</label>
       <select id="category" required [(ngModel)]="newQuestion.category_name" name="category">
         <option value="">Seleccionar categoría</option>
-        <option value="Picante">Picante</option>
-        <option value="Curiosidades">Curiosidades</option>
-        <!-- Agrega más opciones según sea necesario -->
-         <!-- Esto no deberia estar hardcodeado! -->
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
+        </option>
       </select>
     </div>
 
