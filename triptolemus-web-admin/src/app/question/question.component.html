@@ -1,27 +1,59 @@
-<div>
-  <h2>Agregar Nueva Pregunta</h2>
-  <form (ngSubmit)="onSubmit()" #questionForm="ngForm">
-    <div>
-      <label for="text">Texto de la Pregunta:</label>
-      <input type="text" id="text" required [(ngModel)]="newQuestion.text" name="text" />
-    </div>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Agregar Nueva Pregunta</h2>
 
-    <div>
-      <label for="category">Categoría:</label>
-      <select id="category" required [(ngModel)]="newQuestion.category_name" name="category">
-        <option value="">Seleccionar categoría</option>
+  <!-- Formulario en línea -->
+  <form (ngSubmit)="onSubmit()" #questionForm="ngForm" class="row gx-2 gy-2 align-items-center">
+    
+    <!-- Campo de texto de pregunta como <textarea> -->
+<div class="col-auto flex-grow-1">
+  <label for="text" class="visually-hidden">Texto de la Pregunta:</label>
+  <textarea
+    id="text"
+    required
+    [(ngModel)]="newQuestion.text"
+    name="text"
+    class="form-control"
+    placeholder="Escribe la pregunta"
+    rows="1"
+    (input)="autoResize($event)"
+  ></textarea>
+</div>
+
+    <!-- Selección de categoría en otra columna -->
+    <div class="col-auto">
+      <label for="category" class="visually-hidden">Categoría:</label>
+      <select
+        id="category"
+        required
+        [(ngModel)]="newQuestion.category_name"
+        name="category"
+        class="form-select"
+      >
+        <option value="">Categoría</option>
         <option *ngFor="let category of categories" [value]="category.name">
           {{ category.name }}
         </option>
       </select>
     </div>
 
-    <button type="submit" [disabled]="questionForm.invalid">Agregar Pregunta</button>
+    <!-- Botón de envío en otra columna -->
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary" [disabled]="questionForm.invalid">Agregar</button>
+    </div>
   </form>
-    <h2>Lista de Preguntas</h2>
-    <ul>
-      <li *ngFor="let question of Questions">
-        {{ question.text}}
-      </li>
-    </ul>
-  </div>
+
+  <!-- Lista de preguntas con scroll -->
+  <h2 class="text-center mt-5">Lista de Preguntas</h2>
+  <ul class="list-group scrollable-list">
+    <li *ngFor="let question of Questions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+      {{ question.text }}
+      <!-- Icono de papelera -->
+      <fa-icon 
+        [icon]="faTrash" 
+        class="text-danger ms-2" 
+        (click)="deleteQuestion(question.id!)" 
+        style="cursor: pointer;">
+      </fa-icon>
+    </li>
+  </ul>
+</div>

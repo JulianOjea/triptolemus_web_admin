@@ -6,14 +6,16 @@ import { Question } from '../models/question.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../models/category.model';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './Question.component.html',
-  styleUrls: ['./Question.component.css']
+  styleUrls: ['./question.component.css']
 })
 
 export class QuestionComponent implements OnInit {
@@ -21,6 +23,7 @@ export class QuestionComponent implements OnInit {
   Questions: Question[] = [];  // Array para almacenar las Questions
   newQuestion: Question = { text: '', category_name: '' }; // Para almacenar la nueva pregunta
   categories: Category[] = []; 
+  faTrash = faTrash;
 
   constructor(private questionService: QuestionService, private categoryService: CategoryService) {}  // Inyecta el servicio
 
@@ -61,4 +64,24 @@ export class QuestionComponent implements OnInit {
     });
     }
   }
+  
+  autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto'; // Reinicia el alto
+    textarea.style.height = textarea.scrollHeight + 'px'; // Ajusta el alto al contenido
+  }
+
+  async deleteQuestion(questionId: number) {
+    try {
+      await firstValueFrom(this.questionService.deleteQuestion(questionId));
+      console.log('Pregunta eliminada con éxito');
+      // La vista se actualiza automáticamente gracias al async pipe
+
+      // Eliminar la pregunta localmente del array Questions
+    this.Questions = this.Questions.filter(question => question.id !== questionId);
+    } catch (error) {
+      console.error('Error al eliminar la pregunta', error);
+    }
+  }
 }
+

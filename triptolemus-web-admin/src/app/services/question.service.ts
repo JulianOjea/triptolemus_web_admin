@@ -25,4 +25,10 @@ export class QuestionService {
       const headers = this.authService.getAuthHeaders();
       return this.http.post<Question>(this.apiUrl, question, { headers });
     }
+
+  // Eliminar una Question por ID
+  deleteQuestion(id: number): Observable<void> {
+    const headers = this.authService.getAuthHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+  }
 }
