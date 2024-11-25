@@ -71,17 +71,26 @@ export class QuestionComponent implements OnInit {
     textarea.style.height = textarea.scrollHeight + 'px'; // Ajusta el alto al contenido
   }
 
-  async deleteQuestion(questionId: number) {
-    try {
-      await firstValueFrom(this.questionService.deleteQuestion(questionId));
-      console.log('Pregunta eliminada con éxito');
-      // La vista se actualiza automáticamente gracias al async pipe
+  deleteQuestion(questionId: number): void {
+    this.questionService.deleteQuestion(questionId).subscribe({
+      next: () => {
+        this.Questions = this.Questions.filter(q => q.id !== questionId);
+        console.log('Pregunta eliminada con éxito');
+      },
+      error: (error) => {
+        console.error('Error al eliminar la pregunta:', error);
+      },
+    });
+  }
 
-      // Eliminar la pregunta localmente del array Questions
-    this.Questions = this.Questions.filter(question => question.id !== questionId);
-    } catch (error) {
-      console.error('Error al eliminar la pregunta', error);
-    }
+  promptDelete(index: number): void {
+    // Activa el estado de confirmación para la pregunta seleccionada
+    this.Questions[index].confirmingDelete = true;
+  }
+
+  cancelDelete(index: number): void {
+    // Cancela el estado de confirmación para la pregunta seleccionada
+    this.Questions[index].confirmingDelete = false;
   }
 }
 
