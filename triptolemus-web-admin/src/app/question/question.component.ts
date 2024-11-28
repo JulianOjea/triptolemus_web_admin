@@ -7,8 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../models/category.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Observable, firstValueFrom } from 'rxjs';
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-questions',
@@ -24,6 +23,7 @@ export class QuestionComponent implements OnInit {
   newQuestion: Question = { text: '', category_name: '' }; // Para almacenar la nueva pregunta
   categories: Category[] = []; 
   faTrash = faTrash;
+  faPen = faPen;
 
   constructor(private questionService: QuestionService, private categoryService: CategoryService) {}  // Inyecta el servicio
 
@@ -91,6 +91,39 @@ export class QuestionComponent implements OnInit {
   cancelDelete(index: number): void {
     // Cancela el estado de confirmación para la pregunta seleccionada
     this.Questions[index].confirmingDelete = false;
+  }
+
+  loadQuestions() {
+    this.questionService.getQuestions().subscribe((questions) => {
+      this.Questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
+    });
+  }
+
+  startEdit(index: number) {
+    this.Questions[index].isEditing = true;
+  }
+
+  cancelEdit(index: number) {
+    this.Questions[index].isEditing = false;
+    this.loadQuestions(); // Recargar preguntas para descartar cambios
+  }
+
+  saveEdit(question: Question) {
+    const category = this.categories.find((cat) => cat.id === question.category_id);
+
+    if (!category) {
+      console.error('Categoría no encontrada para el id:', question.category_id);
+      return;
+  }
+
+    this.questionService.updateQuestion({
+      id: question.id,
+      text: question.text, 
+      category_name: category.name
+    }).subscribe((updatedQuestion) => {
+      const index = this.Questions.findIndex((q) => q.id === updatedQuestion.id);
+      this.Questions[index] = { ...updatedQuestion, isEditing: false };
+    });
   }
 }
 

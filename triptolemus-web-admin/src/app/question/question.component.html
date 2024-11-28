@@ -46,17 +46,44 @@
   <h2 class="text-center mt-5">Lista de Preguntas</h2>
   <ul class="list-group scrollable-list">
     <li *ngFor="let question of Questions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
-      {{ question.text }}
+      <div *ngIf="!question.isEditing; else editMode">
+        {{ question.text }}
+      </div>
+      <ng-template #editMode>
+        <textarea
+          [(ngModel)]="question.text"
+          class="form-control"
+          rows="1"
+          (input)="autoResize($event)"
+        ></textarea>
+      </ng-template>
       <!-- Icono de papelera -->
       <div>
-        <fa-icon 
-          *ngIf="!question.confirmingDelete"
+        <fa-icon
+          *ngIf="!question.isEditing"
+          [icon]="faPen" 
+          class="text-primary ms-2" 
+          (click)="startEdit(i)"
+          style="cursor: pointer;">
+        </fa-icon>
+        <fa-icon
+          *ngIf="!question.isEditing && !question.confirmingDelete"
           [icon]="faTrash" 
           class="text-danger ms-2" 
           (click)="promptDelete(i)"
           style="cursor: pointer;">
         </fa-icon>
-  
+        
+        <!-- Botones de guardar/cancelar -->
+        <div *ngIf="question.isEditing" class="edit-buttons">
+          <button class="btn btn-sm btn-success me-1" (click)="saveEdit(question)">
+            Guardar
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="cancelEdit(i)">
+            Cancelar
+          </button>
+        </div>
+        
         <!-- Botones de confirmación -->
         <div *ngIf="question.confirmingDelete" class="confirm-buttons">
           <button class="btn btn-sm btn-danger me-1" (click)="deleteQuestion(question.id!)">

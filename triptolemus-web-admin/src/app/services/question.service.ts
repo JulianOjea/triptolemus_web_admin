@@ -31,4 +31,13 @@ export class QuestionService {
     const headers = this.authService.getAuthHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
+
+  updateQuestion(question: Question): Observable<Question> {
+    const url = `${this.apiUrl}/${question.id}`;
+    const headers = this.authService.getAuthHeaders();
+    console.log("AQUIIUI");
+    console.log(url);
+    console.log(headers);
+    return this.http.put<Question>(url, question, { headers }); 
+  }
 }
