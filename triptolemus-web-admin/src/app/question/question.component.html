@@ -57,15 +57,16 @@
           (input)="autoResize($event)"
         ></textarea>
       </ng-template>
-      <!-- Icono de papelera -->
+      <!-- Icono de lapiz -->
       <div>
         <fa-icon
-          *ngIf="!question.isEditing"
+          *ngIf="!question.isEditing && !question.confirmingDelete"
           [icon]="faPen" 
           class="text-primary ms-2" 
           (click)="startEdit(i)"
           style="cursor: pointer;">
         </fa-icon>
+        <!-- Icono de papelera -->
         <fa-icon
           *ngIf="!question.isEditing && !question.confirmingDelete"
           [icon]="faTrash" 
