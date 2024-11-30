@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../models/question.model';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { AuthService } from './auth.service';
 
 export class QuestionService {
 
-    private apiUrl = 'http://localhost:3000/questions';
+    private apiUrl = environment.questionUrl;
 
     constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -35,9 +36,6 @@ export class QuestionService {
   updateQuestion(question: Question): Observable<Question> {
     const url = `${this.apiUrl}/${question.id}`;
     const headers = this.authService.getAuthHeaders();
-    console.log("AQUIIUI");
-    console.log(url);
-    console.log(headers);
     return this.http.put<Question>(url, question, { headers }); 
   }
 }

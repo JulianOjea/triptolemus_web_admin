@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   async login(username: string, password: string): Promise<void> {
     try {
       const response = await lastValueFrom(
-        this.http.post<any>('http://localhost:3000/users/login', { username, password })
+        this.http.post<any>(environment.loginUrl, { username, password })
       );
       
       localStorage.setItem(this.tokenKey, response.token);
