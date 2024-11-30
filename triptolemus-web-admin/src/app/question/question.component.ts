@@ -25,6 +25,9 @@ export class QuestionComponent implements OnInit {
   newQuestion: Question = { text: '', category_name: '' }; // Para almacenar la nueva pregunta
   categories: Category[] = []; 
 
+  filteredQuestions: Question[] = [];
+  searchTerm: string = '';
+
   //icons
   faTrash = faTrash;
   faPen = faPen;
@@ -40,7 +43,8 @@ export class QuestionComponent implements OnInit {
   obtenerQuestions(): void {
     this.questionService.getQuestions().subscribe((data: Question[]) => {
       this.Questions = data;  // Asigna las Questions obtenidas al array
-    }, error => {
+      this.filteredQuestions = data; // Inicializamos filteredQuestions con todas las preguntas
+    }, error => { 
       console.error('Error al obtener las Questions:', error);  // Manejo de errores
     });
   }
@@ -80,6 +84,8 @@ export class QuestionComponent implements OnInit {
     this.questionService.deleteQuestion(questionId).subscribe({
       next: () => {
         this.Questions = this.Questions.filter(q => q.id !== questionId);
+        this.filteredQuestions = this.Questions;
+        this.searchTerm = '';
         console.log('Pregunta eliminada con éxito');
       },
       error: (error) => {
@@ -88,51 +94,84 @@ export class QuestionComponent implements OnInit {
     });
   }
 
-  promptDelete(index: number): void {
-    // Activa el estado de confirmación para la pregunta seleccionada
-    this.Questions[index].confirmingDelete = true;
+  promptDelete(questionId: number | undefined): void {
+    if (questionId === undefined) {
+      console.error('El id de la pregunta no está definido');
+      return; // Termina la ejecución si no hay id
+    }
+    const question = this.Questions.find(q => q.id === questionId);
+    if (question) {
+      question.confirmingDelete = true;
+    }
   }
 
-  cancelDelete(index: number): void {
-    // Cancela el estado de confirmación para la pregunta seleccionada
-    this.Questions[index].confirmingDelete = false;
+  cancelDelete(questionId: number): void {
+    const question = this.Questions.find(q => q.id === questionId);
+    if (question) {
+      question.confirmingDelete = false;
+    }
   }
 
   loadQuestions() {
-    this.questionService.getQuestions().subscribe((questions) => {
-      this.Questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
-    });
+  this.questionService.getQuestions().subscribe((questions) => {
+    this.Questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
+    this.filteredQuestions = this.Questions; // Actualiza también filteredQuestions
+  });
+}
+
+  startEdit(questionId: number) {
+    const question = this.Questions.find(q => q.id === questionId);
+  if (question) {
+    question.isEditing = true;
+  }
   }
 
-  startEdit(index: number) {
-    this.Questions[index].isEditing = true;
+  cancelEdit(questionId: number): void {
+    const question = this.Questions.find(q => q.id === questionId);
+    if (question) {
+      question.isEditing = false;
+      this.loadQuestions(); // Recargar preguntas para descartar cambios
+      this.searchTerm = "";
+    }
   }
 
-  cancelEdit(index: number) {
-    this.Questions[index].isEditing = false;
-    this.loadQuestions(); // Recargar preguntas para descartar cambios
-  }
-
-  saveEdit(question: Question) {
+  saveEdit(question: Question): void {
     const category = this.categories.find((cat) => cat.id === question.category_id);
-
     if (!category) {
       console.error('Categoría no encontrada para el id:', question.category_id);
       return;
-  }
-
+    }
+  
     this.questionService.updateQuestion({
       id: question.id,
       text: question.text, 
       category_name: category.name
     }).subscribe((updatedQuestion) => {
       const index = this.Questions.findIndex((q) => q.id === updatedQuestion.id);
-      this.Questions[index] = { ...updatedQuestion, isEditing: false };
+      if (index !== -1) {
+        this.Questions[index] = { ...updatedQuestion, isEditing: false };
+      }
+
+      this.loadQuestions(); 
     });
   }
 
   logout() {
     this.authService.logout();
+  }
+
+  filterQuestions(): void {
+    if (this.searchTerm.trim() === '') {
+      this.filteredQuestions = this.Questions;
+    } else {
+      this.filteredQuestions = this.Questions.filter(question =>
+        question.text.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+  }
+
+  onSearchChange(): void {
+    this.filterQuestions();
   }
 }
 

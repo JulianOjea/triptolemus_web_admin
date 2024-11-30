@@ -52,8 +52,18 @@
 
   <!-- Lista de preguntas con scroll -->
   <h2 class="text-center mt-5">Lista de Preguntas</h2>
+  <div class="mb-4">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()"
+      placeholder="Buscar pregunta..."
+      class="form-control"
+    />
+  </div>
+
   <ul class="list-group scrollable-list">
-    <li *ngFor="let question of Questions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+    <li *ngFor="let question of filteredQuestions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
       <div *ngIf="!question.isEditing; else editMode">
         {{ question.text }}
       </div>
@@ -68,18 +78,18 @@
       <!-- Icono de lapiz -->
       <div>
         <fa-icon
-          *ngIf="!question.isEditing && !question.confirmingDelete"
+          *ngIf="!question.isEditing && !question.confirmingDelete && question.id !== undefined"
           [icon]="faPen" 
           class="text-primary ms-2" 
-          (click)="startEdit(i)"
+          (click)="startEdit(question.id)"
           style="cursor: pointer;">
         </fa-icon>
         <!-- Icono de papelera -->
         <fa-icon
-          *ngIf="!question.isEditing && !question.confirmingDelete"
+          *ngIf="!question.isEditing && !question.confirmingDelete && question.id !== undefined"
           [icon]="faTrash" 
           class="text-danger ms-2" 
-          (click)="promptDelete(i)"
+          (click)="promptDelete(question.id)"
           style="cursor: pointer;">
         </fa-icon>
         
@@ -88,7 +98,7 @@
           <button class="btn btn-sm btn-success me-1" (click)="saveEdit(question)">
             Guardar
           </button>
-          <button class="btn btn-sm btn-secondary" (click)="cancelEdit(i)">
+          <button class="btn btn-sm btn-secondary" (click)="cancelEdit(question.id!)">
             Cancelar
           </button>
         </div>
@@ -98,7 +108,7 @@
           <button class="btn btn-sm btn-danger me-1" (click)="deleteQuestion(question.id!)">
             Confirmar
           </button>
-          <button class="btn btn-sm btn-secondary" (click)="cancelDelete(i)">
+          <button class="btn btn-sm btn-secondary" (click)="cancelDelete(question.id!)">
             Cancelar
           </button>
         </div>
