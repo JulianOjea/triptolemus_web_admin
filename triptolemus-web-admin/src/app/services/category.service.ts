@@ -16,7 +16,6 @@ export class CategoryService {
 
   // Obtener categorías dinámicamente
   getCategories(): Observable<Category[]> {
-    const headers = this.authService.getAuthHeaders();
-    return this.http.get<Category[]>(this.apiUrl, { headers });
+    return this.http.get<Category[]>(this.apiUrl);
   }
 }

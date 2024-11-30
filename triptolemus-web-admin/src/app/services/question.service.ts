@@ -17,25 +17,21 @@ export class QuestionService {
 
     // Obtener todas las Questions
     getQuestions(): Observable<Question[]> {
-      const headers = this.authService.getAuthHeaders();
-      return this.http.get<Question[]>(this.apiUrl, { headers });
+      return this.http.get<Question[]>(this.apiUrl);
     }
   
     // Añadir una nueva Question
     addQuestion(question: Question): Observable<Question> {
-      const headers = this.authService.getAuthHeaders();
-      return this.http.post<Question>(this.apiUrl, question, { headers });
+      return this.http.post<Question>(this.apiUrl, question);
     }
 
   // Eliminar una Question por ID
   deleteQuestion(id: number): Observable<void> {
-    const headers = this.authService.getAuthHeaders();
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   updateQuestion(question: Question): Observable<Question> {
     const url = `${this.apiUrl}/${question.id}`;
-    const headers = this.authService.getAuthHeaders();
-    return this.http.put<Question>(url, question, { headers }); 
+    return this.http.put<Question>(url, question); 
   }
 }
