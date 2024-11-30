@@ -7,7 +7,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../models/category.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../services/auth.service';
+
 
 @Component({
   selector: 'app-questions',
@@ -22,10 +24,13 @@ export class QuestionComponent implements OnInit {
   Questions: Question[] = [];  // Array para almacenar las Questions
   newQuestion: Question = { text: '', category_name: '' }; // Para almacenar la nueva pregunta
   categories: Category[] = []; 
+
+  //icons
   faTrash = faTrash;
   faPen = faPen;
+  faSignOutAlt = faSignOutAlt;
 
-  constructor(private questionService: QuestionService, private categoryService: CategoryService) {}  // Inyecta el servicio
+  constructor(private questionService: QuestionService, private categoryService: CategoryService, private authService : AuthService) {}  // Inyecta el servicio
 
   ngOnInit(): void {
     this.obtenerQuestions();  // Llama al método para obtener Questions al iniciar el componente
@@ -124,6 +129,10 @@ export class QuestionComponent implements OnInit {
       const index = this.Questions.findIndex((q) => q.id === updatedQuestion.id);
       this.Questions[index] = { ...updatedQuestion, isEditing: false };
     });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
 

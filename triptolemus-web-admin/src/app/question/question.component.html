@@ -1,5 +1,13 @@
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Agregar Nueva Pregunta</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-center flex-grow-1">Agregar Nueva Pregunta</h2>
+    <fa-icon 
+      [icon]="faSignOutAlt" 
+      class="text-danger ms-2" 
+      (click)="logout()" 
+      style="cursor: pointer; font-size: 1.5rem;">
+    </fa-icon>
+  </div>
 
   <!-- Formulario en línea -->
   <form (ngSubmit)="onSubmit()" #questionForm="ngForm" class="row gx-2 gy-2 align-items-center">
