@@ -22,7 +22,7 @@ export class AuthService {
       
       this.router.navigate(['question']);
     } catch (error) {
-      console.error('Error al iniciar sesión', error);
+      throw new Error('Usuario o contraseña incorrectos');
     }
   }
 

@@ -14,14 +14,14 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
   loading: boolean = false;
-  error: string = '';
+  loginError: string = '';
   success: boolean = false;
 
   constructor(private authService: AuthService) {}
 
   async onLogin() {
     this.loading = true;
-    this.error = '';
+    this.loginError = '';
     this.success = false;
 
     try {
@@ -29,11 +29,9 @@ export class LoginComponent {
       await this.authService.login(this.username, this.password);
       this.loading = false;
       this.success = true;
-      console.log('Login exitoso');
     } catch (err) {
       this.loading = false;
-      this.error = 'Usuario o contraseña incorrectos';
-      console.error('Error en el login:', err);
+      this.loginError = 'Usuario o contraseña incorrectos';
     }
   }
   

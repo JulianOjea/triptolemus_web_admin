@@ -1,6 +1,10 @@
 <div style="max-width: 300px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
     <h2 style="text-align: center; margin-bottom: 20px;">Login</h2>
     
+    <div *ngIf="loginError" style="color: red; text-align: center; margin-bottom: 15px;">
+      {{ loginError }}
+    </div>
+    
     <div style="margin-bottom: 15px;">
       <label style="display: block; margin-bottom: 5px;">Usuario:</label>
       <input 
