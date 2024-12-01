@@ -1,41 +1,24 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2 class="text-center flex-grow-1">Agregar Nueva Pregunta</h2>
-  <fa-icon 
-    [icon]="faSignOutAlt" 
-    class="text-danger ms-2" 
-    (click)="logout()" 
+  <fa-icon [icon]="faSignOutAlt" class="text-danger ms-2" (click)="logout()"
     style="cursor: pointer; font-size: 1.5rem;">
   </fa-icon>
 </div>
 
 <!-- Formulario en línea -->
 <form (ngSubmit)="onSubmit()" #questionForm="ngForm" class="row gx-2 gy-2 align-items-center">
-  
+
   <!-- Campo de texto de pregunta como <textarea> -->
-<div class="col-auto flex-grow-1">
-<label for="text" class="visually-hidden">Texto de la Pregunta:</label>
-<textarea
-  id="text"
-  required
-  [(ngModel)]="newQuestion.text"
-  name="text"
-  class="form-control"
-  placeholder="Escribe la pregunta"
-  rows="1"
-  (input)="autoResize($event)"
-></textarea>
-</div>
+  <div class="col-auto flex-grow-1">
+    <label for="text" class="visually-hidden">Texto de la Pregunta:</label>
+    <textarea id="text" required [(ngModel)]="newQuestion.text" name="text" class="form-control"
+      placeholder="Escribe la pregunta" rows="1" (input)="autoResize($event)"></textarea>
+  </div>
 
   <!-- Selección de categoría en otra columna -->
   <div class="col-auto">
     <label for="category" class="visually-hidden">Categoría:</label>
-    <select
-      id="category"
-      required
-      [(ngModel)]="newQuestion.category_name"
-      name="category"
-      class="form-select"
-    >
+    <select id="category" required [(ngModel)]="newQuestion.category_name" name="category" class="form-select">
       <option value="">Categoría</option>
       <option *ngFor="let category of categories" [value]="category.name">
         {{ category.name }}

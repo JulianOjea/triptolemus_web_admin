@@ -1,14 +1,13 @@
 // src/app/Questions/Questions.component.ts
 import { Component, OnInit } from '@angular/core';
-import { QuestionService } from '../services/question.service';
-import { CategoryService } from '../services/category.service';
-import { Question } from '../models/question.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Category } from '../models/category.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faPen} from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from '../services/auth.service';
+
+import { Question } from '../models/question.model';
+import { Category } from '../models/category.model';
+import { QuestionService } from '../services/question.service';
 import { Add_questionComponent } from './add_question/add_question.component';
 
 @Component({
@@ -21,40 +20,43 @@ import { Add_questionComponent } from './add_question/add_question.component';
 
 export class QuestionComponent implements OnInit {
   
-  Questions: Question[] = [];  // Array para almacenar las Questions
-  newQuestion: Question = { text: '', category_name: '' }; // Para almacenar la nueva pregunta
+  Questions: Question[] = []; //Stores questions
   categories: Category[] = []; 
 
-  filteredQuestions: Question[] = [];
+  filteredQuestions: Question[] = []; //Auxiliar list used to filter questions
   searchTerm: string = '';
 
   //icons
   faTrash = faTrash;
   faPen = faPen;
 
-  constructor(private questionService: QuestionService, private categoryService: CategoryService, private authService : AuthService) {}  // Inyecta el servicio
+  constructor(private questionService: QuestionService) {}
 
+  //Adds new question from add_question component
   handleNewQuestion(question: Question) {
-    this.Questions.push(question); // Añade la pregunta a tu lista
+    this.Questions.push(question);
   }
 
   ngOnInit(): void {
-    this.obtenerQuestions();  // Llama al método para obtener Questions al iniciar el componente
+    this.getQuestions();
   }
 
-  obtenerQuestions(): void {
-    this.questionService.getQuestions().subscribe((data: Question[]) => {
-      this.Questions = data;  // Asigna las Questions obtenidas al array
-      this.filteredQuestions = data; // Inicializamos filteredQuestions con todas las preguntas
-    }, error => { 
-      console.error('Error al obtener las Questions:', error);  // Manejo de errores
+  getQuestions(): void {
+    this.questionService.getQuestions().subscribe({
+      next: (data: Question[]) => {
+        this.Questions = data;
+        this.filteredQuestions = data; 
+      },
+      error: (error) => {
+        console.error('Error al obtener las Questions:', error);
+      }
     });
   }
   
   autoResize(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto'; // Reinicia el alto
-    textarea.style.height = textarea.scrollHeight + 'px'; // Ajusta el alto al contenido
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
   deleteQuestion(questionId: number): void {
@@ -63,7 +65,6 @@ export class QuestionComponent implements OnInit {
         this.Questions = this.Questions.filter(q => q.id !== questionId);
         this.filteredQuestions = this.Questions;
         this.searchTerm = '';
-        console.log('Pregunta eliminada con éxito');
       },
       error: (error) => {
         console.error('Error al eliminar la pregunta:', error);
@@ -73,26 +74,25 @@ export class QuestionComponent implements OnInit {
 
   promptDelete(questionId: number | undefined): void {
     if (questionId === undefined) {
-      console.error('El id de la pregunta no está definido');
-      return; // Termina la ejecución si no hay id
+      return;
     }
     const question = this.Questions.find(q => q.id === questionId);
     if (question) {
-      question.confirmingDelete = true;
+      question.isDeleting = true;
     }
   }
 
   cancelDelete(questionId: number): void {
     const question = this.Questions.find(q => q.id === questionId);
     if (question) {
-      question.confirmingDelete = false;
+      question.isDeleting = false;
     }
   }
 
   loadQuestions() {
   this.questionService.getQuestions().subscribe((questions) => {
     this.Questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
-    this.filteredQuestions = this.Questions; // Actualiza también filteredQuestions
+    this.filteredQuestions = this.Questions;
   });
 }
 
@@ -107,7 +107,7 @@ export class QuestionComponent implements OnInit {
     const question = this.Questions.find(q => q.id === questionId);
     if (question) {
       question.isEditing = false;
-      this.loadQuestions(); // Recargar preguntas para descartar cambios
+      this.loadQuestions();
       this.searchTerm = "";
     }
   }
@@ -146,7 +146,5 @@ export class QuestionComponent implements OnInit {
   onSearchChange(): void {
     this.filterQuestions();
   }
-
-  
 }
 

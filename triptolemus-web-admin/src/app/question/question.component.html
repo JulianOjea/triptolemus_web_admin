@@ -1,53 +1,34 @@
 <div class="container mt-5">
 
-  <app-add_question 
-  [categories]="categories" 
-  (questionAdded)="handleNewQuestion($event)">
-</app-add_question>
+  <app-add_question [categories]="categories" (questionAdded)="handleNewQuestion($event)">
+  </app-add_question>
 
   <!-- Lista de preguntas con scroll -->
   <h2 class="text-center mt-5">Lista de Preguntas</h2>
   <div class="mb-4">
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearchChange()"
-      placeholder="Buscar pregunta..."
-      class="form-control"
-    />
+    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Buscar pregunta..."
+      class="form-control" />
   </div>
 
   <ul class="list-group scrollable-list">
-    <li *ngFor="let question of filteredQuestions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+    <li *ngFor="let question of filteredQuestions; let i = index"
+      class="list-group-item d-flex justify-content-between align-items-center">
       <div *ngIf="!question.isEditing; else editMode">
         {{ question.text }}
       </div>
       <ng-template #editMode>
-        <textarea
-          [(ngModel)]="question.text"
-          class="form-control"
-          rows="1"
-          (input)="autoResize($event)"
-        ></textarea>
+        <textarea [(ngModel)]="question.text" class="form-control" rows="1" (input)="autoResize($event)"></textarea>
       </ng-template>
       <!-- Icono de lapiz -->
       <div>
-        <fa-icon
-          *ngIf="!question.isEditing && !question.confirmingDelete && question.id !== undefined"
-          [icon]="faPen" 
-          class="text-primary ms-2" 
-          (click)="startEdit(question.id)"
-          style="cursor: pointer;">
+        <fa-icon *ngIf="!question.isEditing && !question.isDeleting && question.id !== undefined" [icon]="faPen"
+          class="text-primary ms-2" (click)="startEdit(question.id)" style="cursor: pointer;">
         </fa-icon>
         <!-- Icono de papelera -->
-        <fa-icon
-          *ngIf="!question.isEditing && !question.confirmingDelete && question.id !== undefined"
-          [icon]="faTrash" 
-          class="text-danger ms-2" 
-          (click)="promptDelete(question.id)"
-          style="cursor: pointer;">
+        <fa-icon *ngIf="!question.isEditing && !question.isDeleting && question.id !== undefined" [icon]="faTrash"
+          class="text-danger ms-2" (click)="promptDelete(question.id)" style="cursor: pointer;">
         </fa-icon>
-        
+
         <!-- Botones de guardar/cancelar -->
         <div *ngIf="question.isEditing" class="edit-buttons">
           <button class="btn btn-sm btn-success me-1" (click)="saveEdit(question)">
@@ -57,9 +38,9 @@
             Cancelar
           </button>
         </div>
-        
+
         <!-- Botones de confirmación -->
-        <div *ngIf="question.confirmingDelete" class="confirm-buttons">
+        <div *ngIf="question.isDeleting" class="confirm-buttons">
           <button class="btn btn-sm btn-danger me-1" (click)="deleteQuestion(question.id!)">
             Confirmar
           </button>

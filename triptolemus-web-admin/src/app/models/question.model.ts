@@ -3,6 +3,6 @@ export interface Question {
     text: string;
     category_name: string;
     category_id?: number;
-    confirmingDelete?: boolean;
+    isDeleting?: boolean;
     isEditing?: boolean;
   }  
