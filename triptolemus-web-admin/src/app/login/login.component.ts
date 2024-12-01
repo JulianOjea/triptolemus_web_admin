@@ -25,7 +25,6 @@ export class LoginComponent {
     this.success = false;
 
     try {
-      // Llamada a login usando async/await
       await this.authService.login(this.username, this.password);
       this.loading = false;
       this.success = true;
@@ -34,5 +33,4 @@ export class LoginComponent {
       this.loginError = 'Usuario o contraseña incorrectos';
     }
   }
-  
 }

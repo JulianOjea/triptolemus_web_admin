@@ -7,14 +7,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../models/category.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrash, faPen, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen} from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../services/auth.service';
-
+import { Add_questionComponent } from './add_question/add_question.component';
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, FormsModule, FontAwesomeModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, Add_questionComponent],
   templateUrl: './Question.component.html',
   styleUrls: ['./question.component.css']
 })
@@ -31,13 +31,15 @@ export class QuestionComponent implements OnInit {
   //icons
   faTrash = faTrash;
   faPen = faPen;
-  faSignOutAlt = faSignOutAlt;
 
   constructor(private questionService: QuestionService, private categoryService: CategoryService, private authService : AuthService) {}  // Inyecta el servicio
 
+  handleNewQuestion(question: Question) {
+    this.Questions.push(question); // Añade la pregunta a tu lista
+  }
+
   ngOnInit(): void {
     this.obtenerQuestions();  // Llama al método para obtener Questions al iniciar el componente
-    this.getCategory(); //con categorias iguial
   }
 
   obtenerQuestions(): void {
@@ -47,31 +49,6 @@ export class QuestionComponent implements OnInit {
     }, error => { 
       console.error('Error al obtener las Questions:', error);  // Manejo de errores
     });
-  }
-
-  getCategory(): void {
-    this.categoryService.getCategories().subscribe((data: Category[]) => {
-      this.categories = data;
-    }, error => {
-      console.error('Error al obtener las categorías:', error);
-    });
-  }
-
-
-  onSubmit() {
-    console.log('Enviando nueva pregunta:', this.newQuestion);
-    if (this.newQuestion.text && this.newQuestion.category_name) {
-      this.questionService.addQuestion(this.newQuestion).subscribe({
-        next: (response) => {
-          // Puedes agregar la nueva pregunta a la lista localmente si lo deseas
-          this.Questions.push(response); // Agregar la pregunta recién creada a la lista
-          this.newQuestion = { text: '', category_name: '' }; // Reiniciar el formulario
-        },
-        error: (error) => {
-          console.error('Error al agregar pregunta', error);
-        }
-    });
-    }
   }
   
   autoResize(event: Event): void {
@@ -156,10 +133,6 @@ export class QuestionComponent implements OnInit {
     });
   }
 
-  logout() {
-    this.authService.logout();
-  }
-
   filterQuestions(): void {
     if (this.searchTerm.trim() === '') {
       this.filteredQuestions = this.Questions;
@@ -173,5 +146,7 @@ export class QuestionComponent implements OnInit {
   onSearchChange(): void {
     this.filterQuestions();
   }
+
+  
 }
 
