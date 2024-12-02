@@ -9,6 +9,7 @@ import { Question } from '../models/question.model';
 import { Category } from '../models/category.model';
 import { QuestionService } from '../services/question.service';
 import { Add_questionComponent } from './add_question/add_question.component';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-questions',
@@ -20,7 +21,7 @@ import { Add_questionComponent } from './add_question/add_question.component';
 
 export class QuestionComponent implements OnInit {
   
-  Questions: Question[] = []; //Stores questions
+  questions: Question[] = []; //Stores questions
   categories: Category[] = []; 
 
   filteredQuestions: Question[] = []; //Auxiliar list used to filter questions
@@ -30,21 +31,33 @@ export class QuestionComponent implements OnInit {
   faTrash = faTrash;
   faPen = faPen;
 
-  constructor(private questionService: QuestionService) {}
-
-  //Adds new question from add_question component
-  handleNewQuestion(question: Question) {
-    this.Questions.push(question);
-  }
+  constructor(private questionService: QuestionService, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.getQuestions();
+    this.getCategories();
+  }
+
+  //Adds new question from add_question component
+  handleNewQuestion(question: Question) {
+    this.questions.push(question);
+  }
+
+  getCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data: Category[]) => {
+        this.categories = data;
+      },
+      error: (error: any) => {
+        console.error('Error al obtener las categorías:', error);
+      }
+    })
   }
 
   getQuestions(): void {
     this.questionService.getQuestions().subscribe({
       next: (data: Question[]) => {
-        this.Questions = data;
+        this.questions = data;
         this.filteredQuestions = data; 
       },
       error: (error) => {
@@ -62,8 +75,8 @@ export class QuestionComponent implements OnInit {
   deleteQuestion(questionId: number): void {
     this.questionService.deleteQuestion(questionId).subscribe({
       next: () => {
-        this.Questions = this.Questions.filter(q => q.id !== questionId);
-        this.filteredQuestions = this.Questions;
+        this.questions = this.questions.filter(q => q.id !== questionId);
+        this.filteredQuestions = this.questions;
         this.searchTerm = '';
       },
       error: (error) => {
@@ -76,14 +89,14 @@ export class QuestionComponent implements OnInit {
     if (questionId === undefined) {
       return;
     }
-    const question = this.Questions.find(q => q.id === questionId);
+    const question = this.questions.find(q => q.id === questionId);
     if (question) {
       question.isDeleting = true;
     }
   }
 
   cancelDelete(questionId: number): void {
-    const question = this.Questions.find(q => q.id === questionId);
+    const question = this.questions.find(q => q.id === questionId);
     if (question) {
       question.isDeleting = false;
     }
@@ -91,20 +104,20 @@ export class QuestionComponent implements OnInit {
 
   loadQuestions() {
   this.questionService.getQuestions().subscribe((questions) => {
-    this.Questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
-    this.filteredQuestions = this.Questions;
+    this.questions = questions.map((q) => ({ ...q, isEditing: false, confirmingDelete: false }));
+    this.filteredQuestions = this.questions;
   });
 }
 
   startEdit(questionId: number) {
-    const question = this.Questions.find(q => q.id === questionId);
+    const question = this.questions.find(q => q.id === questionId);
   if (question) {
     question.isEditing = true;
   }
   }
 
   cancelEdit(questionId: number): void {
-    const question = this.Questions.find(q => q.id === questionId);
+    const question = this.questions.find(q => q.id === questionId);
     if (question) {
       question.isEditing = false;
       this.loadQuestions();
@@ -124,9 +137,9 @@ export class QuestionComponent implements OnInit {
       text: question.text, 
       category_name: category.name
     }).subscribe((updatedQuestion) => {
-      const index = this.Questions.findIndex((q) => q.id === updatedQuestion.id);
+      const index = this.questions.findIndex((q) => q.id === updatedQuestion.id);
       if (index !== -1) {
-        this.Questions[index] = { ...updatedQuestion, isEditing: false };
+        this.questions[index] = { ...updatedQuestion, isEditing: false };
       }
 
       this.loadQuestions(); 
@@ -135,9 +148,9 @@ export class QuestionComponent implements OnInit {
 
   filterQuestions(): void {
     if (this.searchTerm.trim() === '') {
-      this.filteredQuestions = this.Questions;
+      this.filteredQuestions = this.questions;
     } else {
-      this.filteredQuestions = this.Questions.filter(question =>
+      this.filteredQuestions = this.questions.filter(question =>
         question.text.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }

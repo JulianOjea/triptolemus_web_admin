@@ -1,20 +1,18 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Category } from '../../models/category.model';
 import { Question } from '../../models/question.model';
-import { AuthService } from '../../services/auth.service';
 import { CategoryService } from '../../services/category.service';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
+import { LogoutComponent } from "../logout/logout.component";
 
 @Component({
   selector: 'app-add_question',
   standalone: true,
-  imports: [FontAwesomeModule, FormsModule, CommonModule],
+  imports: [FontAwesomeModule, FormsModule, CommonModule, LogoutComponent],
   templateUrl: './add_question.component.html',
   styleUrls: ['./add_question.component.css']
 })
@@ -27,8 +25,6 @@ export class Add_questionComponent{
   @Output() questionAdded = new EventEmitter<Question>();
   
   newQuestion: Question = { text: '', category_name: '' };
-
-  faSignOutAlt = faSignOutAlt;
 
   ngOnInit(): void {
     this.getCategories();
@@ -64,9 +60,5 @@ export class Add_questionComponent{
         console.error('Error al obtener las categorías:', error);
       }
     })
-  }
-
-  logout() {
-    inject(AuthService).logout();
   }
 }

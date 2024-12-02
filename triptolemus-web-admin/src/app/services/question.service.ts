@@ -31,7 +31,6 @@ export class QuestionService {
   }
 
   updateQuestion(question: Question): Observable<Question> {
-    const url = `${this.apiUrl}/${question.id}`;
-    return this.http.put<Question>(url, question); 
+    return this.http.put<Question>(`${this.apiUrl}/${question.id}`, question); 
   }
 }
