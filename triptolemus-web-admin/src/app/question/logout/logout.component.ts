@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   faSignOutAlt = faSignOutAlt;
 
@@ -22,6 +22,6 @@ export class LogoutComponent implements OnInit {
   }
 
   logout() {
-    inject(AuthService).logout();
+    this.authService.logout();
   }
 }
