@@ -20,6 +20,7 @@ export class AuthService {
       );
       
       localStorage.setItem(this.tokenKey, response.token);
+      localStorage.setItem('user_name', username);
       
       this.router.navigate(['question']);
     } catch (error) {
@@ -44,6 +45,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('user_name');
     this.router.navigate(['/login']);
   }
 }

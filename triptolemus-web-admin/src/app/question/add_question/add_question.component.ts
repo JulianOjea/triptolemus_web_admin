@@ -37,7 +37,6 @@ export class Add_questionComponent{
   }
 
   onSubmit() {
-    console.log('Enviando nueva pregunta:', this.newQuestion);
     if (this.newQuestion.text && this.newQuestion.category_name) {
       this.questionService.addQuestion(this.newQuestion).subscribe({
         next: (response) => {

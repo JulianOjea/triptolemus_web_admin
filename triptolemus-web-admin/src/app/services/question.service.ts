@@ -11,19 +11,24 @@ import { environment } from '../../environments/environment';
 
 export class QuestionService {
 
-    private apiUrl = environment.questionUrl;
+  private apiUrl = environment.questionUrl;
 
-    constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-    // Obtener todas las Questions
-    getQuestions(): Observable<Question[]> {
-      return this.http.get<Question[]>(this.apiUrl);
-    }
-  
-    // Añadir una nueva Question
-    addQuestion(question: Question): Observable<Question> {
-      return this.http.post<Question>(this.apiUrl, question);
-    }
+  // Obtener todas las Questions
+  getQuestions(): Observable<Question[]> {
+    return this.http.get<Question[]>(this.apiUrl);
+  }
+
+  // Añadir una nueva Question
+  addQuestion(question: Question): Observable<Question> {
+    const user_name = localStorage.getItem('user_name');
+    const questionWithUser = {
+      ...question,
+      user_name,
+    };
+    return this.http.post<Question>(this.apiUrl, questionWithUser);
+  }
 
   // Eliminar una Question por ID
   deleteQuestion(id: number): Observable<void> {
