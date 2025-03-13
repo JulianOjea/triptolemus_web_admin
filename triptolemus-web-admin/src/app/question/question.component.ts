@@ -134,7 +134,8 @@ export class QuestionComponent implements OnInit {
   
     this.questionService.updateQuestion({
       id: question.id,
-      text: question.text, 
+      text_es: question.text_es, 
+      text_eng: question.text_eng,
       category_name: category.name
     }).subscribe((updatedQuestion) => {
       const index = this.questions.findIndex((q) => q.id === updatedQuestion.id);
@@ -146,12 +147,14 @@ export class QuestionComponent implements OnInit {
     });
   }
 
+  // TODO el texto solo busca por español idgaf
   filterQuestions(): void {
     if (this.searchTerm.trim() === '') {
       this.filteredQuestions = this.questions;
     } else {
       this.filteredQuestions = this.questions.filter(question =>
-        question.text.toLowerCase().includes(this.searchTerm.toLowerCase())
+        question.text_es.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        question.text_eng.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
   }

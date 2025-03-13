@@ -24,7 +24,7 @@ export class Add_questionComponent{
   @Input() categories: Category[] = [];
   @Output() questionAdded = new EventEmitter<Question>();
   
-  newQuestion: Question = { text: '', category_name: '' };
+  newQuestion: Question = { text_es: '', text_eng: '', category_name: '' };
 
   ngOnInit(): void {
     this.getCategories();
@@ -37,11 +37,11 @@ export class Add_questionComponent{
   }
 
   onSubmit() {
-    if (this.newQuestion.text && this.newQuestion.category_name) {
+    if (this.newQuestion.text_es && this.newQuestion.category_name) {
       this.questionService.addQuestion(this.newQuestion).subscribe({
         next: (response) => {
           this.questionAdded.emit(response);
-          this.newQuestion = { text: '', category_name: '' };
+          this.newQuestion = { text_es: '', text_eng: '', category_name: '' };
         },
         error: (error) => {
           console.error('Error al agregar pregunta', error);

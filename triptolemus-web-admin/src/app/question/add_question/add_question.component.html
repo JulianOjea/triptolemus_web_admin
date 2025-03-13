@@ -8,9 +8,15 @@
 
   <!-- Campo de texto de pregunta como <textarea> -->
   <div class="col-auto flex-grow-1">
-    <label for="text" class="visually-hidden">Texto de la Pregunta:</label>
-    <textarea id="text" required [(ngModel)]="newQuestion.text" name="text" class="form-control"
-      placeholder="Escribe la pregunta" rows="1" (input)="autoResize($event)"></textarea>
+    <label for="text" class="visually-hidden"></label>
+    <textarea id="text" required [(ngModel)]="newQuestion.text_es" name="text" class="form-control"
+      placeholder="Texto en español" rows="1" (input)="autoResize($event)"></textarea>
+  </div>
+
+  <div class="col-auto flex-grow-1">
+    <label for="text" class="visually-hidden"></label>
+    <textarea id="text" required [(ngModel)]="newQuestion.text_eng" name="text" class="form-control"
+      placeholder="Texto en ingles" rows="1" (input)="autoResize($event)"></textarea>
   </div>
 
   <!-- Selección de categoría en otra columna -->
