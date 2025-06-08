@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://example.com',
-    loginUrl: 'http://example/users/login',
-    questionUrl: 'http://example/questions',
-    categoryUrl: 'http://example/category'
+    apiUrl: 'https://triptolemus-backend.onrender.com',
+    loginUrl: 'https://triptolemus-backend.onrender.com/users/login',
+    questionUrl: 'https://triptolemus-backend.onrender.com/questions',
+    categoryUrl: 'https://triptolemus-backend.onrender.com/category'
   };
