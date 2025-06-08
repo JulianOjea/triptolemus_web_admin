@@ -15,7 +15,7 @@ import { CategoryService } from '../services/category.service';
   selector: 'app-questions',
   standalone: true,
   imports: [CommonModule, FormsModule, FontAwesomeModule, Add_questionComponent],
-  templateUrl: './Question.component.html',
+  templateUrl: './question.component.html',
   styleUrls: ['./question.component.css']
 })
 
