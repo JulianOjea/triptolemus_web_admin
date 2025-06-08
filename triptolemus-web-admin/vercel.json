@@ -1,8 +1,18 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/triptolemus-web-admin/browser/**",
+      "use": "@vercel/static"
+    }
   ],
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "outputDirectory": "dist/triptolemus-web-admin"
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
